@@ -22,10 +22,10 @@ First, start by getting the code with git (you might need to run the commands
 as the `root` user):
 
 ```console
-# cd /var/www/
-# git clone https://github.com/flusio/Flus.git
-# cd Flus
-flus# git checkout TAG
+cd /var/www/
+git clone https://github.com/flusio/Flus.git
+cd Flus
+git checkout TAG
 ```
 
 You must replace the `TAG` argument with the latest version that you can find
@@ -36,7 +36,7 @@ on the [GitHub releases page](https://github.com/flusio/Flus/releases).
 Install the Composer dependencies with:
 
 ```console
-flus$ composer install --no-dev --optimize-autoloader
+composer install --no-dev --optimize-autoloader
 ```
 
 ## Configure the environment
@@ -44,8 +44,8 @@ flus$ composer install --no-dev --optimize-autoloader
 You must now configure the environment by creating the `.env` file:
 
 ```console
-flus# cp env.sample .env
-flus# vim .env # or edit with nano or whatever editor you prefer
+cp env.sample .env
+vim .env # or edit with nano or whatever editor you prefer
 ```
 
 The environment file is commented so it should not be too complicated to setup
@@ -54,9 +54,12 @@ correctly.
 You can check the database is correctly configured with:
 
 ```console
-flus# sudu -u www-data php cli database status
-Database status: OK
+sudo -u www-data php cli database status
 ```
+
+It should return the following:
+
+> Database status: OK
 
 It’ll not tell you if the user has correct permissions though.
 
@@ -71,14 +74,14 @@ You should set the owner of the files to the user that runs Nginx. This is
 often `www-data`:
 
 ```console
-flus# chown -R www-data:www-data .
+chown -R www-data:www-data .
 ```
 
 You should also change the permissions on the `.env` file to limit the risks of
 credentials being stolen. The `www-data` user only needs `read` permission:
 
 ```console
-flus# chmod 400 .env
+chmod 400 .env
 ```
 
 ## Setup the database
@@ -86,7 +89,7 @@ flus# chmod 400 .env
 You must now load the SQL schema to your database. You can do it with:
 
 ```console
-flus# sudo -u www-data php cli migrations setup --seed
+sudo -u www-data php cli migrations setup --seed
 ```
 
 If the permissions are correct, you should have a message to tell you the
@@ -184,9 +187,9 @@ WantedBy=multi-user.target
 Then, reload the systemd daemon and start the service:
 
 ```console
-# systemctl daemon-reload
-# systemctl enable flus-worker
-# systemctl start flus-worker
+systemctl daemon-reload
+systemctl enable flus-worker
+systemctl start flus-worker
 ```
 
 You should obviously adapt the service files to your needs. Also, you might not
@@ -206,29 +209,29 @@ Topics are used to categorize collections. They only can be created by the
 administrator with the CLI for now:
 
 ```console
-flus# sudo -u www-data php cli topics create --label=LABEL
+sudo -u www-data php cli topics create --label=LABEL
 ```
 
 You must change `LABEL` by the name of your topic (e.g. economics, politics,
 health). You can pass an `image_url` param to set an illustration:
 
 ```console
-flus# sudo -u www-data php cli topics create --label=LABEL --image_url=https://flus.fr/carnet/card.png
+sudo -u www-data php cli topics create --label=LABEL --image_url=https://flus.fr/carnet/card.png
 ```
 
 If you’ve made a mistake, you can update or delete a topic with:
 
 ```console
-flus# sudo -u www-data php cli topics update --id=ID --label=NEW_LABEL
-flus# # OR to delete
-flus# sudo -u www-data php cli topics delete --id=ID
+sudo -u www-data php cli topics update --id=ID --label=NEW_LABEL
+# OR to delete
+sudo -u www-data php cli topics delete --id=ID
 ```
 
 You must change `ID` by the id of an existing topic. You can find topic ids by
 listing them:
 
 ```console
-flus# sudo -u www-data php cli topics
+sudo -u www-data php cli topics
 ```
 
 ## Optional: Configure Pocket
@@ -261,7 +264,7 @@ browscap = /usr/local/etc/php/browscap.ini
 Don’t forget to restart PHP:
 
 ```console
-# systemctl restart php
+systemctl restart php
 ```
 
 You can find more information on Browscap at [php.net/browscap](https://php.net/browscap).
@@ -319,7 +322,7 @@ Anytime you change these options, you should also consider to execute the
 following command:
 
 ```console
-flus# sudo -u www-data php cli feeds reset-hashes
+sudo -u www-data php cli feeds reset-hashes
 ```
 
 This allows to force the synchronization of feeds that are unchanged to get
@@ -334,7 +337,7 @@ friends or family on your instance, you’ll have to create their account via th
 CLI:
 
 ```console
-flus# sudo -u www-data php cli users create --username=Abby --email=email@example.com --password=secret
+sudo -u www-data php cli users create --username=Abby --email=email@example.com --password=secret
 ```
 
 ## Optional: Change the “What’s new?” feed
